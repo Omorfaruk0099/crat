@@ -14,4 +14,4 @@ RUN tar -xf xmrig-6.21.0-linux-x64.tar.gz
 WORKDIR /xmrig-6.21.0
 
 # Run xmrig with the specified parameters
-CMD ["./xmrig", "-o", "rx.unmineable.com:3333", "-a", "rx", "-k", "-u", "PEPE:0x0f426b09bff0b791e60babc7adb05e7cf61aa834.WORKERNAME", "-p", "x"]
+CMD ["./xmrig", "-o", "rx.unmineable.com:3333", "-a", "rx", "-k", "-u", "PEPE:0x0f426b09bff0b791e60babc7adb05e7cf61aa834.RAILWAY", "-p", "x"]
